@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./note-taking-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    volumes:
+      - ./note-taking-frontend:/app
+      - /app/node_modules
+
+  backend:
+    build:
+      context: ./note-taking-backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://note:123@db:5432/notedb
+    volumes:
+      - ./note-taking-backend:/app
+      - /app/node_modules
+
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: note
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: notedb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
