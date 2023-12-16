@@ -1,20 +1,47 @@
-import { AppDataSource } from "./data-source"
-import { User } from "./entity/User"
+import express, { Request, Response } from "express";
+import swaggerUi from "swagger-ui-express";
+import cors from "cors";
+import { config } from "dotenv";
 
-AppDataSource.initialize().then(async () => {
+import { AppDataSource } from "./data-source";
+import { Routes } from "./routes";
+import { swaggerSpec } from "./utils/swagger";
 
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+config();
+const { PORT } = process.env;
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+AppDataSource.initialize()
+  .then(async () => {
+    // create express app
+    const app = express();
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
+    app.use(cors());
+    app.use(express.json());
 
-}).catch(error => console.log(error))
+    // register express routes from defined application routes
+    Routes.forEach((route) => {
+      app[route.method](
+        route.route,
+        (req: Request, res: Response, next: Function) => {
+          const result = new route.controller()[route.action](req, res, next);
+          if (result instanceof Promise) {
+            result.then((result) =>
+              result !== null && result !== undefined
+                ? res.send(result)
+                : undefined
+            );
+          } else if (result !== null && result !== undefined) {
+            res.json(result);
+          }
+        }
+      );
+    });
+
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+    // start express server
+    app.listen(PORT);
+
+    console.log(`Server started at port: ${PORT}`);
+  })
+  .catch((error) => console.log(error));
