@@ -1,6 +1,6 @@
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc, { Options, SwaggerDefinition } from "swagger-jsdoc";
 
-const swaggerDefinition = {
+const swaggerDefinition: SwaggerDefinition = {
   openapi: "3.0.0",
   info: {
     title: "Notes API",
@@ -13,9 +13,36 @@ const swaggerDefinition = {
       description: "Development server",
     },
   ],
+  components: {
+    schemas: {
+      Note: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            format: "int64",
+          },
+          title: {
+            type: "string",
+          },
+          description: {
+            type: "string",
+          },
+          created_at: {
+            type: "string",
+            format: "date-time",
+          },
+          updated_at: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+    },
+  },
 };
 
-const options = {
+const options: Options = {
   swaggerDefinition,
   apis: ["src/controller/NoteController.ts"],
 };
