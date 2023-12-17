@@ -9,6 +9,8 @@ export class NoteController {
    * @swagger
    * /notes:
    *   get:
+   *     tags:
+   *        - Note
    *     summary: Retrieve all notes
    *     responses:
    *       200:
@@ -28,6 +30,8 @@ export class NoteController {
    * @swagger
    * /notes/{id}:
    *   get:
+   *     tags:
+   *        - Note
    *     summary: Get a note by ID
    *     parameters:
    *       - in: path
@@ -63,6 +67,8 @@ export class NoteController {
    * @swagger
    * /notes:
    *   post:
+   *     tags:
+   *        - Note
    *     summary: Create a new note
    *     requestBody:
    *       required: true
@@ -101,6 +107,8 @@ export class NoteController {
    * @swagger
    * /notes/{id}:
    *   delete:
+   *     tags:
+   *        - Note
    *     summary: Delete a note by ID
    *     parameters:
    *       - in: path

@@ -1,13 +1,6 @@
 import { NoteController } from "./controller/NoteController";
-
-type HttpMethod = "get" | "post" | "patch" | "delete";
-
-interface Route {
-  method: HttpMethod;
-  route: string;
-  controller: new (...agrs: any[]) => any;
-  action: string;
-}
+import { UserController } from "./controller/UserController";
+import { Route } from "./utils/types";
 
 export const Routes: Route[] = [
   {
@@ -33,5 +26,11 @@ export const Routes: Route[] = [
     route: "/notes/:id",
     controller: NoteController,
     action: "deleteNote",
+  },
+  {
+    method: "post",
+    route: "/users",
+    controller: UserController,
+    action: "createUser",
   },
 ];

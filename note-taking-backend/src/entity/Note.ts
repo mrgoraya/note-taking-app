@@ -9,7 +9,7 @@ import {
 
 @Entity()
 export class Note extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id!: number;
 
   @Column()

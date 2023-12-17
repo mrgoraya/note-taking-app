@@ -12,7 +12,6 @@ const { PORT } = process.env;
 
 AppDataSource.initialize()
   .then(async () => {
-    // create express app
     const app = express();
 
     app.use(cors());
@@ -39,7 +38,6 @@ AppDataSource.initialize()
 
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-    // start express server
     app.listen(PORT);
 
     console.log(`Server started at port: ${PORT}`);

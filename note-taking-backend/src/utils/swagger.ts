@@ -38,13 +38,33 @@ const swaggerDefinition: SwaggerDefinition = {
           },
         },
       },
+      User: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          password: {
+            type: "string",
+          },
+        },
+      },
     },
   },
 };
 
 const options: Options = {
   swaggerDefinition,
-  apis: ["src/controller/NoteController.ts"],
+  apis: [
+    "src/controller/UserController.ts",
+    "src/controller/NoteController.ts",
+  ],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);
