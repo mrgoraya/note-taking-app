@@ -1,6 +1,8 @@
-import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
+
+import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
+import { hash } from "argon2";
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
@@ -47,12 +49,40 @@ export class UserController {
       return "The user exists in the DB";
     }
 
+    const hashedPassword = await hash(password);
+
     const user = Object.assign(new User(), {
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    return {
+      name,
+      email,
+    };
+  }
+
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     tags:
+   *        - User
+   *     summary: Retrieve all Users
+   *     responses:
+   *       200:
+   *         description: A list of Users
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/User'
+   */
+  async findAll(request: Request, response: Response, next: NextFunction) {
+    return this.userRepository.find();
   }
 }

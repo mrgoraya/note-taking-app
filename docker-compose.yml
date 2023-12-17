@@ -25,6 +25,7 @@ services:
       - PORT=3000
     volumes:
       - ./note-taking-backend:/usr/src/app
+      - /usr/src/app/node_modules
 
   db:
     image: postgres

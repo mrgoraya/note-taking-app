@@ -1,3 +1,4 @@
+import { AuthController } from "./controller/AuthController";
 import { NoteController } from "./controller/NoteController";
 import { UserController } from "./controller/UserController";
 import { Route } from "./utils/types";
@@ -32,5 +33,17 @@ export const Routes: Route[] = [
     route: "/users",
     controller: UserController,
     action: "createUser",
+  },
+  {
+    method: "get",
+    route: "/users",
+    controller: UserController,
+    action: "findAll",
+  },
+  {
+    method: "post",
+    route: "/auth",
+    controller: AuthController,
+    action: "authenticateUser",
   },
 ];

@@ -62,6 +62,7 @@ const swaggerDefinition: SwaggerDefinition = {
 const options: Options = {
   swaggerDefinition,
   apis: [
+    "src/controller/AuthController.ts",
     "src/controller/UserController.ts",
     "src/controller/NoteController.ts",
   ],
