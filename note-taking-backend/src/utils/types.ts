@@ -1,3 +1,5 @@
+import { RequestHandler } from "express";
+
 export type HttpMethod = "get" | "post" | "patch" | "delete";
 
 export interface Route {
@@ -5,4 +7,5 @@ export interface Route {
   route: string;
   controller: new (...agrs: any[]) => any;
   action: string;
+  middleware?: RequestHandler[];
 }

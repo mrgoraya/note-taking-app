@@ -1,3 +1,4 @@
+import { auth } from "../middleware/auth";
 import { AuthController } from "./controller/AuthController";
 import { NoteController } from "./controller/NoteController";
 import { UserController } from "./controller/UserController";
@@ -14,13 +15,14 @@ export const Routes: Route[] = [
     method: "get",
     route: "/notes/:id",
     controller: NoteController,
-    action: "one",
+    action: "getById",
   },
   {
     method: "post",
     route: "/notes",
     controller: NoteController,
     action: "createNote",
+    middleware: [auth],
   },
   {
     method: "delete",

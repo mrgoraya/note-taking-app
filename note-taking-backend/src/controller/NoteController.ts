@@ -71,6 +71,13 @@ export class NoteController {
    *     tags:
    *        - Note
    *     summary: Create a new note
+   *     parameters:
+   *       - in: header
+   *         name: x-auth-token
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: [token]
    *     requestBody:
    *       required: true
    *       content:
