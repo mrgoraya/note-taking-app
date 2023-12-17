@@ -23,7 +23,8 @@ export class NoteController {
    *                 $ref: '#/components/schemas/Note'
    */
   async findAll(request: Request, response: Response, next: NextFunction) {
-    return this.noteRepository.find();
+    const notes = await this.noteRepository.find();
+    return notes;
   }
 
   /**
@@ -58,9 +59,9 @@ export class NoteController {
     });
 
     if (!note) {
-      return "Note not found";
+      return response.send("Note not found");
     }
-    return note;
+    return response.send(note);
   }
 
   /**
@@ -100,7 +101,9 @@ export class NoteController {
       description,
     });
 
-    return this.noteRepository.save(note);
+    const createdNote = await this.noteRepository.save(note);
+
+    return response.send(createdNote);
   }
 
   /**
@@ -129,11 +132,14 @@ export class NoteController {
     let noteToRemove = await this.noteRepository.findOneBy({ id });
 
     if (!noteToRemove) {
-      return "The note does not exist.";
+      return response.send("The note does not exist.");
     }
 
     await this.noteRepository.remove(noteToRemove);
 
-    return "The note is removed.";
+    return response.send({
+      id,
+      message: "The note is removed.",
+    });
   }
 }

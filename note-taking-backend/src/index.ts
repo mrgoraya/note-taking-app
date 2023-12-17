@@ -25,9 +25,7 @@ AppDataSource.initialize()
           const result = new route.controller()[route.action](req, res, next);
           if (result instanceof Promise) {
             result.then((result) =>
-              result !== null && result !== undefined
-                ? res.send(result)
-                : undefined
+              result !== null && result !== undefined ? result : undefined
             );
           } else if (result !== null && result !== undefined) {
             res.json(result);

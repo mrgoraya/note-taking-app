@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcryptjs";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
-import { hash } from "argon2";
+import { sign } from "jsonwebtoken";
+import { UserDto } from "../entity/dto/UserDto";
+import { AuthService } from "../service/AuthService";
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
+  private authService = new AuthService();
 
   /**
    * @swagger
@@ -46,10 +50,11 @@ export class UserController {
       email,
     });
     if (existedUser) {
-      return "The user exists in the DB";
+      return response.send("The user exists in the DB");
     }
 
-    const hashedPassword = await hash(password);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = Object.assign(new User(), {
       name,
@@ -57,12 +62,19 @@ export class UserController {
       password: hashedPassword,
     });
 
-    await this.userRepository.save(user);
+    const createdUser: UserDto = await this.userRepository.save(user);
 
-    return {
-      name,
-      email,
-    };
+    const token = this.authService.generatreAuthToken(
+      createdUser.id,
+      createdUser.name,
+      createdUser.email
+    );
+
+    return response.header("x-auth-token", token).send({
+      id: createdUser.id,
+      name: createdUser.name,
+      email: createdUser.email,
+    });
   }
 
   /**
@@ -83,6 +95,7 @@ export class UserController {
    *                 $ref: '#/components/schemas/User'
    */
   async findAll(request: Request, response: Response, next: NextFunction) {
-    return this.userRepository.find();
+    const users = await this.userRepository.find();
+    return response.send(users);
   }
 }

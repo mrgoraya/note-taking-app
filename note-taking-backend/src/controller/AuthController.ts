@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { verify } from "argon2";
+import bcrypt from "bcryptjs";
+import { sign } from "jsonwebtoken";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
+import { UserDto } from "../entity/dto/UserDto";
+import { AuthService } from "../service/AuthService";
 
 export class AuthController {
   private userRepository = AppDataSource.getRepository(User);
+  private authService = new AuthService();
 
   /**
    * @swagger
@@ -41,19 +45,26 @@ export class AuthController {
   ) {
     const { email, password } = request.body;
 
-    const existedUser = await this.userRepository.findOneBy({
+    const existedUser: UserDto | null = await this.userRepository.findOneBy({
       email,
     });
     if (!existedUser) {
-      return "User does not exist. Create User first.";
+      return response.send("User does not exist. Create User first.");
     }
 
-    const validateUser = await verify(existedUser.password as string, password);
-    if (!validateUser) return "invalid password";
+    const validateUser = await bcrypt.compare(password, existedUser.password);
+    if (!validateUser) return response.send("invalid password");
 
-    return {
+    const token = this.authService.generatreAuthToken(
+      existedUser.id,
+      existedUser.name,
+      existedUser.email
+    );
+
+    return response.send({
       email,
       message: "Successfully authenticated",
-    };
+      token,
+    });
   }
 }
