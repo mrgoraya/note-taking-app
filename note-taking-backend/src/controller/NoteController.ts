@@ -39,7 +39,7 @@ export class NoteController {
    *         name: id
    *         required: true
    *         schema:
-   *           type: integer
+   *           type: string
    *         description: The note ID
    *     responses:
    *       200:
@@ -52,7 +52,7 @@ export class NoteController {
    *         description: Note not found
    */
   async getById(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id);
+    const { id } = request.params;
 
     const note = await this.noteRepository.findOne({
       where: { id },
@@ -121,11 +121,17 @@ export class NoteController {
    *        - Note
    *     summary: Delete a note by ID
    *     parameters:
+   *       - in: header
+   *         name: x-auth-token
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: [token]
    *       - in: path
    *         name: id
    *         required: true
    *         schema:
-   *           type: integer
+   *           type: string
    *         description: The note ID
    *     responses:
    *       200:
@@ -134,7 +140,7 @@ export class NoteController {
    *         description: Note not found
    */
   async deleteNote(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id);
+    const { id } = request.params;
 
     let noteToRemove = await this.noteRepository.findOneBy({ id });
 

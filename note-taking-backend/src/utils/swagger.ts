@@ -19,8 +19,7 @@ const swaggerDefinition: SwaggerDefinition = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
-            format: "int64",
+            type: "string",
           },
           title: {
             type: "string",
@@ -53,6 +52,9 @@ const swaggerDefinition: SwaggerDefinition = {
           password: {
             type: "string",
           },
+          isAdmin: {
+            type: "boolean",
+          },
         },
       },
       UserWithOutPassword: {
@@ -66,6 +68,9 @@ const swaggerDefinition: SwaggerDefinition = {
           },
           email: {
             type: "string",
+          },
+          isAdmin: {
+            type: "boolean",
           },
         },
       },

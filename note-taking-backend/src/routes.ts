@@ -1,4 +1,5 @@
 import { auth } from "../middleware/auth";
+import { admin } from "../middleware/admin";
 import { AuthController } from "./controller/AuthController";
 import { NoteController } from "./controller/NoteController";
 import { UserController } from "./controller/UserController";
@@ -10,6 +11,7 @@ export const Routes: Route[] = [
     route: "/notes",
     controller: NoteController,
     action: "findAll",
+    middleware: [auth],
   },
   {
     method: "get",
@@ -29,6 +31,7 @@ export const Routes: Route[] = [
     route: "/notes/:id",
     controller: NoteController,
     action: "deleteNote",
+    middleware: [auth, admin],
   },
   {
     method: "post",

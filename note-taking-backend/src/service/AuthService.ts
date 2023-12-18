@@ -1,8 +1,15 @@
 import { sign } from "jsonwebtoken";
 
 export class AuthService {
-  generatreAuthToken(id: string, name: string, email: string) {
+  generatreAuthToken(
+    id: string,
+    name: string,
+    email: string,
+    isAdmin: boolean
+  ) {
     const { ACCESS_TOKEN_SECRET } = process.env;
-    return sign({ id, name, email }, ACCESS_TOKEN_SECRET as string);
+    const payload = { id, name, email, isAdmin };
+
+    return sign(payload, ACCESS_TOKEN_SECRET as string);
   }
 }

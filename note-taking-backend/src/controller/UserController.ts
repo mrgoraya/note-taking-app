@@ -34,6 +34,8 @@ export class UserController {
    *                 type: string
    *               password:
    *                 type: string
+   *               isAdmin:
+   *                 type: boolean
    *     responses:
    *       201:
    *         description: User created
@@ -43,7 +45,7 @@ export class UserController {
    *               $ref: '#/components/schemas/User'
    */
   async createUser(request: Request, response: Response, next: NextFunction) {
-    const { name, email, password } = request.body;
+    const { name, email, password, isAdmin } = request.body;
 
     const existedUser = await this.userRepository.findOneBy({
       email,
@@ -59,6 +61,7 @@ export class UserController {
       name,
       email,
       password: hashedPassword,
+      isAdmin,
     });
 
     const createdUser: UserDto = await this.userRepository.save(user);
@@ -66,13 +69,15 @@ export class UserController {
     const token = this.authService.generatreAuthToken(
       createdUser.id,
       createdUser.name,
-      createdUser.email
+      createdUser.email,
+      createdUser.isAdmin
     );
 
     return response.header("x-auth-token", token).send({
       id: createdUser.id,
       name: createdUser.name,
       email: createdUser.email,
+      isAdmin: createdUser.isAdmin,
     });
   }
 

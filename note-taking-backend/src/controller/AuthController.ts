@@ -58,7 +58,8 @@ export class AuthController {
     const token = this.authService.generatreAuthToken(
       existedUser.id,
       existedUser.name,
-      existedUser.email
+      existedUser.email,
+      existedUser.isAdmin
     );
 
     return response.send({
