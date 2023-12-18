@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
-import { sign } from "jsonwebtoken";
 import { UserDto } from "../entity/dto/UserDto";
 import { AuthService } from "../service/AuthService";
 
@@ -75,6 +74,40 @@ export class UserController {
       name: createdUser.name,
       email: createdUser.email,
     });
+  }
+
+  /**
+   * @swagger
+   * /users/me:
+   *   get:
+   *     tags:
+   *        - User
+   *     summary: Get user
+   *     parameters:
+   *       - in: header
+   *         name: x-auth-token
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: [token]
+   *     responses:
+   *       200:
+   *         description: User object
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/UserWithOutPassword'
+   *       404:
+   *         description: User not found
+   */
+  async getOne(request: Request, response: Response, next: NextFunction) {
+    const user = await this.userRepository
+      .createQueryBuilder("user")
+      .select(["user.id", "user.name", "user.email"])
+      .where("user.id = :id", { id: request.user.id })
+      .getOne();
+
+    response.send(user);
   }
 
   /**

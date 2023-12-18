@@ -43,6 +43,13 @@ export const Routes: Route[] = [
     action: "findAll",
   },
   {
+    method: "get",
+    route: "/users/me",
+    controller: UserController,
+    action: "getOne",
+    middleware: [auth],
+  },
+  {
     method: "post",
     route: "/auth",
     controller: AuthController,
